@@ -3,7 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome,AntDesign, Entypo } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,10 +14,22 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
+import TabOneScreen from '../screens/homeScreen/HomeScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import HomeCategory from '../components/homeCategory/HomeCategory';
+import MovieDetails from '../screens/MovieDetails/movieDetails';
+import '../assets/data/globals';
+
+/*
+
+<AntDesign name="search1" size={24} color="black" />
+<AntDesign name="home" size={24} color="black" />
+<AntDesign name="download" size={24} color="black" />
+<Entypo name="video" size={24} color="black" />
+
+*/ 
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -40,6 +52,9 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="MovieDetails" component={MovieDetails} options={{ title: 'MovieDetails' }} />
+      <Stack.Screen name="HomeScreen" component={TabOneScreen} options={{ title: 'MovieDetails' }} />
+     
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
@@ -55,19 +70,21 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-
+  
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
+      }}
+      
+      >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        name="Home"
+        component={ TabOneScreen}
+        options={({ navigation }: RootTabScreenProps<'Home'>) => ({
+          title: 'Home',
+          tabBarIcon: ({ color }) =><AntDesign name="home" size={24} color={color} /> ,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
@@ -75,7 +92,7 @@ function BottomTabNavigator() {
                 opacity: pressed ? 0.5 : 1,
               })}>
               <FontAwesome
-                name="info-circle"
+                name="sign-in"
                 size={25}
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 15 }}
@@ -83,13 +100,30 @@ function BottomTabNavigator() {
             </Pressable>
           ),
         })}
+      
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Search"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Search',
+          tabBarIcon: ({ color }) => <AntDesign name="search1" size={24} color={color} />,
+        }}
+      />
+       <BottomTab.Screen
+        name="Library"
+        component={TabOneScreen}
+        options={{
+          title: 'Library',
+          tabBarIcon: ({ color }) => <Entypo name="video" size={24} color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Downloads"
+        component={TabOneScreen}
+        options={{
+          title: 'Downloads',
+          tabBarIcon: ({ color }) => <AntDesign name="download" size={24} color={color} />,
         }}
       />
     </BottomTab.Navigator>

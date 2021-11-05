@@ -1,0 +1,2 @@
+global.token='';
+global.consumername='';
